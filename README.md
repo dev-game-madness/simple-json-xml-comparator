@@ -1,45 +1,102 @@
 # Simple JSON & XML Comparator
 
-Настольная программа для сравнения двух документов JSON или XML. Окно без системной рамки, два поля рядом.
+[English](#english)
 
-По каждому полю можно открыть файл (`json`, `xml`) или вставить текст, очистить поле, отформатировать документ (Beautify), попробовать экспериментальное исправление (Исправить*) и снять экранирование кавычек у вложенного фрагмента (Убрать экранирование). Сравнение включается отдельно: программа проверяет оба текста, и если форматы различаются или текст некорректен, сравнение не начинается. В режиме сравнения подсвечиваются удалённые, добавленные и изменённые строки; поля можно поменять местами и сохранить отчёт HTML.
+## Возможности
 
-Ключи JSON и атрибуты XML перед сравнением упорядочиваются всегда, поэтому их порядок сам по себе не отличие. Кнопка «Упорядочить структуру» дополнительно сортирует элементы массивов JSON и дочерние элементы XML. Можно оставить только строки с отличиями, показать номера строк и отдельно скрыть удалённые или добавленные строки. Есть светлая и тёмная тема. Документ длиннее 8 МиБ не обрабатывается.
+В каждое поле можно вставить текст или открыть файл `.json` / `.xml` и очистить его.
 
-Язык интерфейса: русский, английский, китайский. Строки собраны в программу. Рядом с exe лежит `sjxc-lang.txt` — в нём один код языка (`ru`, `en` или `zh`). При смене языка программа перезаписывает этот файл. Если файла нет, используется русский.
+- `Beautify` форматирует документ.
+- `Исправить*` пытается поправить типичные ошибки синтаксиса и сообщает, что именно изменила.
+- `Убрать экранирование` заменяет `\"` на кавычки и раскрывает строки, внутри которых лежит объект или массив.
 
-Код — в `code\`. Генераторы тестовых JSON и XML — в `generators\`.
+`Сравнение` проверяет оба текста. Если поле пустое, форматы различаются или текст некорректен, сравнение не начинается. Подсвечиваются удалённые, добавленные и изменённые строки; внутри изменённой строки — отличающийся фрагмент. Поля можно поменять местами. `Отчёт HTML` сохраняет этот результат в файл. Пока сравнения не было, отчёт не создаётся.
 
-## Версия
+Сравнение идёт по тексту, который программа заново собирает из разобранного документа. Пробелы и переносы исходника на результат не влияют. Ключи объектов JSON и атрибуты XML упорядочиваются всегда, поэтому их порядок сам по себе не отличие. `Упорядочить структуру` дополнительно сортирует элементы массивов JSON и дочерние элементы XML. Комментарии XML и объявление `<?xml …?>` в сравнение не входят: XML собирается из элементов.
 
-Единственный источник номера — `version` в `code\Cargo.toml`. Сейчас это `1.0.0`. Заголовок окна ОС и версия в шапке программы берутся из этой строки при сборке. В шапке номер нарисован мельче и выше названия, сразу после «Simple JSON & XML Comparator».
+`Только отличия` оставляет строки с отличиями и по три строки вокруг, остальные схлопывает. Можно показать номера строк и отдельно скрыть удалённые или добавленные строки.
 
-Имя готового exe: `SimpleJsonXmlComparator-1.0.0.exe` (шаблон `SimpleJsonXmlComparator-{версия}.exe`). В `Cargo.toml` цель называется `SimpleJsonXmlComparator`: rustc не принимает точку в имени крейта, поэтому `cargo build` сначала пишет `SimpleJsonXmlComparator.exe`, и этот файл переименовывается в `SimpleJsonXmlComparator-{версия}.exe` по номеру из `Cargo.toml`. В поставке остаётся только имя с версией.
+Файл больше 16 МБ не открывается. Документ длиннее 8 МБ (8 × 1024 × 1024 байт) не форматируется, не исправляется и не сравнивается.
 
-Ветки:
+## Запуск
 
-- `dev` — линия интеграции. Среднее обновление (новая возможность или крупная переработка) увеличивает MINOR и обнуляет PATCH: `1.0.0` → `1.1.0`. Небольшой фикс увеличивает только PATCH: `1.1.0` → `1.1.1`. Ломающая смена увеличивает MAJOR и обнуляет остальное: `1.3.7` → `2.0.0`.
-- `main` — линия релизов. Коммит и смена версии на `main` только по явной просьбе. Обычная работа `main` не двигает.
+Откройте `SimpleJsonXmlComparator-1.0.0.exe`.
 
-Первая зафиксированная версия на обеих ветках — `1.0.0`. Сообщение коммита начинается с `v.1.0.0`.
+Рядом с exe лежит `sjxc-lang.txt`. В файле одна строка — код языка интерфейса: `ru`, `en` или `zh`. Если файла нет или код неизвестен, интерфейс русский. Смена языка в программе перезаписывает этот файл. В репозитории копия лежит в `code\sjxc-lang.txt`.
+
+Если операция срывается, программа пишет журнал `sjxc-crash-log-….log` в ту же папку, что и exe.
 
 ## Сборка
 
-Из каталога `code`:
+Нужны Rust и Cargo. Команды выполняются из каталога `code`:
 
-```
+```powershell
 cargo build
 cargo build --release
 ```
 
-После переименования отладочный файл: `code\target\debug\SimpleJsonXmlComparator-1.0.0.exe`.
-Релизный файл: `code\target\release\SimpleJsonXmlComparator-1.0.0.exe`.
+Отладочный файл: `code\target\debug\SimpleJsonXmlComparator.exe`.
+Релизный файл: `code\target\release\SimpleJsonXmlComparator.exe`.
 
-Рядом с exe кладётся `code\sjxc-lang.txt`.
+Cargo называет файл по цели `SimpleJsonXmlComparator` из `code\Cargo.toml`. Файл, которым пользуются, называется `SimpleJsonXmlComparator-1.0.0.exe`: номер берётся из поля `version` того же файла. Рядом положите `sjxc-lang.txt`.
 
-Готовые каталоги лежат вне git-репозитория и в него не коммитятся:
+## Состав репозитория
 
-- Отладка: `F:\Projects\NEW\SJXC\DevBuilds\SJXC-d1-0-0\` и архив `F:\Projects\NEW\SJXC\DevBuilds\SJXC-d1-0-0.zip`.
-- Релиз: `F:\Projects\NEW\SJXC\ReleaseBuilds\SJXC-r1-0-0\` и архив `F:\Projects\NEW\SJXC\ReleaseBuilds\SJXC-r1-0-0.zip`.
+- `code\` — исходники программы и `sjxc-lang.txt`.
+- `generators\` — `gen-json.bat`, `gen-xml.bat` и `gen-json-escaped.bat`. Каждый сценарий пишет в свою папку пару примеров с текущей датой в имени файла.
 
-В каталоге и в архиве — exe соответствующей сборки и `sjxc-lang.txt`. Для другой версии в имени каталога и архива три числа через дефис: `SJXC-d{major}-{minor}-{patch}` и `SJXC-r{major}-{minor}-{patch}`. Каталог `target\` в репозиторий не входит.
+## Лицензия
+
+GNU Affero General Public License, версия 3. Текст — в [LICENSE](LICENSE).
+
+## English
+
+[Русский](#simple-json--xml-comparator)
+
+### Features
+
+You can paste text into either field, open a `.json` / `.xml` file, and clear the field.
+
+- `Beautify` formats the document.
+- `Repair*` tries to fix typical syntax errors and reports what it changed.
+- `Unescape` replaces `\"` with quotes and unwraps strings that contain an object or an array.
+
+`Compare` checks both texts. It does not start when a field is empty, the formats differ, or the text is invalid. Removed, added, and changed lines are highlighted; inside a changed line, the differing fragment is highlighted too. The fields can be swapped. `HTML report` saves that result to a file. Until a comparison has been run, no report is created.
+
+Comparison uses text the program rebuilds from the parsed document. Spaces and line breaks in the source do not affect the result. JSON object keys and XML attributes are always ordered, so their order alone is not a difference. `Order structure` also sorts JSON array items and XML child elements. XML comments and the `<?xml …?>` declaration are left out of the comparison: XML is rebuilt from elements.
+
+`Only differences` keeps the lines that differ and three lines around them, and collapses the rest. Line numbers can be shown, and removed or added lines can be hidden on their own.
+
+A file larger than 16 MB is not opened. A document longer than 8 MB (8 × 1024 × 1024 bytes) is not formatted, repaired, or compared.
+
+### Run
+
+Open `SimpleJsonXmlComparator-1.0.0.exe`.
+
+`sjxc-lang.txt` sits next to the exe. The file is one line: the interface language code, `ru`, `en`, or `zh`. If the file is missing or the code is unknown, the interface is Russian. Changing the language in the program overwrites this file. The copy in the repository is `code\sjxc-lang.txt`.
+
+If an operation fails, the program writes a log named `sjxc-crash-log-….log` in the same folder as the exe.
+
+### Build
+
+Rust and Cargo are required. Run the commands from the `code` directory:
+
+```powershell
+cargo build
+cargo build --release
+```
+
+Debug file: `code\target\debug\SimpleJsonXmlComparator.exe`.
+Release file: `code\target\release\SimpleJsonXmlComparator.exe`.
+
+Cargo names the file after the `SimpleJsonXmlComparator` target in `code\Cargo.toml`. The file you run is `SimpleJsonXmlComparator-1.0.0.exe`: the number comes from the `version` field in that same file. Put `sjxc-lang.txt` next to it.
+
+### Repository
+
+- `code\` — program sources and `sjxc-lang.txt`.
+- `generators\` — `gen-json.bat`, `gen-xml.bat`, and `gen-json-escaped.bat`. Each script writes a pair of samples into its own folder, with the current date in the file name.
+
+### License
+
+GNU Affero General Public License, version 3. The text is in [LICENSE](LICENSE).
+
