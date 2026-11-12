@@ -1,5 +1,8 @@
 # Simple JSON & XML Comparator
 
+<img width="1919" height="1039" alt="image" src="https://github.com/user-attachments/assets/c245544d-3efb-46d6-b6b1-f20e605b2fe2" />
+
+
 [English](#english)
 
 ## Возможности
